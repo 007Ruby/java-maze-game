@@ -1,4 +1,4 @@
 public class Shard {
-    ShardType type;
+    Form ShardForm;
     Position position;
 }

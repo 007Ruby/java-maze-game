@@ -1,8 +1,8 @@
 public class Tile {
     TileType type;
 
-    public boolean isAccessibleBy(PlayerForm form) {
-        return type.isAccessibleBy(form);
+    public boolean isAccessibleBy(Form playerForm) {
+        return type.isAccessibleBy(playerForm);
     }
 
     public TileType getType() {

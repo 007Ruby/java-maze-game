@@ -1,11 +1,11 @@
 import java.util.*;
 
 public class Key {
-    Set<ShardType> collected;
+    Set<Form> collectedShards;
     int requiredCount;
 
     boolean isComplete() {
-        return collected.size() == requiredCount;
+        return collectedShards.size() == requiredCount;
     };
 
 }

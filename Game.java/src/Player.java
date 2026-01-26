@@ -1,4 +1,4 @@
 public class Player {
-    PlayerForm form;
+    Form PlayerForm;
     Position position;
 }

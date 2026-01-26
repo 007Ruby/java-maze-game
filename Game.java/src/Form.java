@@ -1,4 +1,4 @@
-enum PlayerForm {
+enum Form {
    GREY,
    BLACK,
    WHITE 
