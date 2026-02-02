@@ -1,7 +1,11 @@
 public class Player {
-    Form PlayerForm;
+    Form playerForm;
     Position position;
 
+    public Player(Position position, Form playerForm) {
+        this.position = position;
+        this.playerForm = playerForm;
+    }
     public Position getPlayerPosition() {
         return this.position;
     }
@@ -11,6 +15,6 @@ public class Player {
     }
 
     public Form getPlayerForm() {
-        return this.PlayerForm;
+        return this.playerForm;
     }
 } 

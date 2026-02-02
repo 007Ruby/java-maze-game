@@ -5,7 +5,12 @@ public class Gamestate {
     Player player;
     List<Shard> shards;
     Key key;
-
+    public Gamestate(Grid grid, Player player, List<Shard> shards, Key key) {
+        this.grid = grid;
+        this.player = player;
+        this.shards = shards;
+        this.key = key;
+    }
     public void movePlayer (Direction d) {
         //find the player's new position 
         Position playerPosition = player.getPlayerPosition();
@@ -29,5 +34,13 @@ public class Gamestate {
                 }
             }
         }
+    }
+
+    public boolean canExit() {
+        return key.isComplete() &&
+        shards.isEmpty() &&
+        player.getPlayerForm() == Form.GREY &&
+        grid.getTileAt(player.getPlayerPosition()).getType() == TileType.EXIT;
+
     }
 }

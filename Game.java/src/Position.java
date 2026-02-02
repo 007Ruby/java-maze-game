@@ -23,7 +23,7 @@ public class Position {
     public int hashCode() {
         return 31 * x + y;
     }
-    
+
     public Position getPosition() {
         return this;
     }
@@ -39,14 +39,16 @@ public class Position {
     //returns the corresponding position to each move 
     public Position move (Direction dir) {
         if (dir == Direction.UP) {
-            return new Position(this.x, this.y + 1);
-        } else if (dir == Direction.DOWN) {
             return new Position(this.x, this.y - 1);
+        } else if (dir == Direction.DOWN) {
+            return new Position(this.x, this.y + 1);
         } else if (dir == Direction.RIGHT) {
             return new Position(this.x + 1, this.y);
         } else if (dir == Direction.LEFT) {
             return new Position(this.x - 1, this.y);
         } 
+        
+
         return this;
     }
 }
