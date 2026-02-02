@@ -2,16 +2,20 @@ import java.util.*;
 
 public class Gamestate {
     Grid grid;
-    Player player;
+    Player black;
+    Player white;
+    Player merged;
     List<Shard> shards;
     Key key;
-    public Gamestate(Grid grid, Player player, List<Shard> shards, Key key) {
+    public Gamestate(Grid grid, Player merged, List<Shard> shards, Key key) {
         this.grid = grid;
-        this.player = player;
+        this.merged = merged;
+        this.white = null;
+        this.black = null;
         this.shards = shards;
         this.key = key;
     }
-    public void movePlayer (Direction d) {
+    public void movePlayer (Player player, Direction d) {
         //find the player's new position 
         Position playerPosition = player.getPlayerPosition();
         Position newPosition = playerPosition.move(d);
@@ -36,11 +40,48 @@ public class Gamestate {
         }
     }
 
+    //checks if black and white entities can merge
+    //to do so, they must be at the same position
+    public boolean canMerge() {
+        return white != null &&
+        black != null && 
+        black.getPlayerPosition().equals(white.getPlayerPosition());
+    }
+
+    //if entities can merge, merged entity is created in that position
+    //black and white entities become null
+    public void merge() {
+        if (!canMerge()) return;
+        merged = new Player (black.getPlayerPosition(), Form.GREY);
+        black = null;
+        white = null;
+    }
+
+    //checks if entities can split
+    //to be able to do so, they must be on a neutral tile
+    public boolean canSplit() {
+        if (merged == null) return false;
+        if (grid.getTileAt(merged.getPlayerPosition()).getType() == TileType.NEUTRAL) return true;
+        return false;
+    }
+
+    //if entities can split, they split on that tile
+    //two new entities (black and white) are created, and merged entity becomes null
+    public void split() {
+        if (!canSplit()) return;
+        black = new Player (merged.getPlayerPosition(), Form.BLACK);
+        white = new Player (merged.getPlayerPosition(), Form.WHITE);
+        merged = null;
+    }
+
+    //checks if the entity can exit
+    //to do, entities must be merged (in grey form) and must be at the exit tile
     public boolean canExit() {
         return key.isComplete() &&
         shards.isEmpty() &&
-        player.getPlayerForm() == Form.GREY &&
-        grid.getTileAt(player.getPlayerPosition()).getType() == TileType.EXIT;
-
+        merged != null  &&
+        grid.getTileAt(merged.getPlayerPosition()).getType() == TileType.EXIT;
     }
+
+
 }
