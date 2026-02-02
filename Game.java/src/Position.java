@@ -10,14 +10,20 @@ public class Position {
 
     //equality is true for positions with the same x and y coordinates
     @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            //if object is not a position, return false
-            if (!(o instanceof Position)) return false;
-            //if object is a position, check for equality through x and y coordinates
-            Position other = (Position) o;
-            return x == other.x && y == other.y;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        //if object is not a position, return false
+        if (!(o instanceof Position)) return false;
+        //if object is a position, check for equality through x and y coordinates
+        Position other = (Position) o;
+        return x == other.x && y == other.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * x + y;
+    }
+    
     public Position getPosition() {
         return this;
     }
