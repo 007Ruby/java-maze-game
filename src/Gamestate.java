@@ -1,6 +1,9 @@
 import java.util.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 
 public class Gamestate {
+    private List<GameStateListener> listeners = new ArrayList<>();
     Grid grid;
     Player black;
     Player white;
@@ -40,6 +43,17 @@ public class Gamestate {
         }
     }
 
+    public void moveBlack(Direction dir) {
+        if (black != null) movePlayer(black, dir);
+    }
+
+    public void moveWhite(Direction dir) {
+        if (white != null) movePlayer(white, dir);
+    }
+
+    public void moveMerged(Direction dir) {
+        if (merged != null) movePlayer(merged, dir);
+    }
     //checks if black and white entities can merge
     //to do so, they must be at the same position
     public boolean canMerge() {
@@ -81,6 +95,29 @@ public class Gamestate {
         shards.isEmpty() &&
         merged != null  &&
         grid.getTileAt(merged.getPlayerPosition()).getType() == TileType.EXIT;
+    }
+
+    public boolean isGameWon() {
+        return canExit();
+    }
+
+    public GameStatus getStatus() {
+        if (canExit()) return GameStatus.WON;
+        return GameStatus.PLAYING;
+    }
+
+    public interface GameStateListener {
+        void onStateChanged();
+    }
+
+    public void addListener(GameStateListener listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyListeners() {
+        for (GameStateListener listener : listeners) {
+            listener.onStateChanged();
+        }
     }
 
 

@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch JavaFX",
+      "request": "launch",
+      "mainClass": "App",
+      "vmArgs": "--module-path /Users/rubyhelal/Downloads/javafx-sdk-17.0.18/lib --add-modules javafx.controls,javafx.graphics"
+    }
+  ]
+}

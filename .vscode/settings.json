@@ -1,0 +1,6 @@
+{
+  "java.project.sourcePaths": ["src"],
+  "java.project.referencedLibraries": [
+    "/Users/rubyhelal/Downloads/javafx-sdk-17.0.18/lib/**/*.jar"
+  ]
+}
