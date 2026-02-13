@@ -1,19 +1,20 @@
 import java.util.*;
 
 public class Key {
-    Set<Form> collectedShards;
+    int collectedShards;
     int requiredCount;
 
     public Key(int requiredCount) {
         this.requiredCount = requiredCount;
-        this.collectedShards = new HashSet<>();
+        this.collectedShards = 0;
     }
     boolean isComplete() {
-        return collectedShards.size() == requiredCount;
+        System.out.println("NUMBER OF COLLECTED SHARDS IS" + collectedShards);
+        return collectedShards == requiredCount;
     };
 
-    public void addShardToKey(Shard shard) {
-        collectedShards.add(shard.getShardForm());
+    public void addShardToKey() {
+        collectedShards += 1;
     }
 
 }

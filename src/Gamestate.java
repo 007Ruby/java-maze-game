@@ -35,7 +35,7 @@ public class Gamestate {
                 Boolean shardHasPlayerForm = shard.getShardForm().equals(player.getPlayerForm());
                 if (shardAtPlayerPosition && shardHasPlayerForm) {
                     //remove shard from grid, add to key
-                    key.addShardToKey(shard);
+                    key.addShardToKey();
                     shards.remove(shard);
                     break;
                 }
@@ -107,14 +107,17 @@ public class Gamestate {
     //checks if the entity can exit
     //to do, entities must be merged (in grey form) and must be at the exit tile
     public boolean canExit() {
+        System.out.println("im in here");
+        if (key.isComplete()) {
+            System.out.println("KEY IS COMPLETE");
+        }
+        if (shards.isEmpty()) {
+            System.out.println("SHARDS ARE TAKEN");
+        }
         return key.isComplete() &&
         shards.isEmpty() &&
         merged != null  &&
         grid.getTileAt(merged.getPlayerPosition()).getTileType() == TileType.EXIT;
-    }
-
-    public boolean isGameWon() {
-        return canExit();
     }
 
     public GameStatus getStatus() {

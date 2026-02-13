@@ -2,8 +2,8 @@ import java.util.*;
 public class DemoLevel {
     public static Gamestate create() {
         Tile[][] tiles = {
-            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY) },
-            { new Tile(TileType.GREY),    new Tile(TileType.GREY), new Tile(TileType.GREY) }
+            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.EXIT) },
+            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY),    new Tile(TileType.GREY), new Tile(TileType.GREY) }
         };
 
         Grid grid = new Grid(tiles);

@@ -2,6 +2,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 public class GameView {
 
@@ -20,6 +21,7 @@ public class GameView {
             drawGrid();
             drawPlayers();
             drawShards();
+            checkForWin();
         }
 
         private void drawGrid() {
@@ -94,5 +96,26 @@ public class GameView {
         }
     }
 
+    //if all winning requirements have been met, visuals will refelct winning
+    public void checkForWin() {
+        if (game.getStatus() == GameStatus.WON) {
+
+        Rectangle overlay = new Rectangle(
+            game.getGrid().getWidth() * tileSize,
+            game.getGrid().getHeight() * tileSize
+        );
+        overlay.setFill(Color.color(0, 0, 0, 0.6));
+
+        Text winText = new Text (
+            100,
+            100,
+            "YOU WIN"
+        );
+        winText.setFill(Color.WHITE);
+        winText.setStyle("-fx-font-size: 40px;");
+
+        root.getChildren().addAll(overlay, winText);
+    }
+    }
 
 }

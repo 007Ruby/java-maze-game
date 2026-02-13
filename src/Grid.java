@@ -7,7 +7,7 @@ public class Grid {
     //ensures that position is within bounds
     public Boolean isWithinBounds (Position p) {
         return p.getX() >= 0 && p.getY() >= 0
-        && p.getX() <= tiles.length && p.getY() <= tiles[0].length;
+        && p.getY() < tiles.length && p.getX() < tiles[0].length;
     }
 
     //returns the specific tile associated with a position
