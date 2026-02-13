@@ -71,6 +71,18 @@ public class Gamestate {
         white = null;
     }
 
+    //returns if the players are merged
+    public boolean areMerged() {
+        return merged != null;
+    }
+
+    //return GreyPlayer
+    public Player getMergedPlayer() {
+        if(areMerged()) 
+            {return this.merged;}
+        return null;
+    }
+
     //checks if entities can split
     //to be able to do so, they must be on a neutral tile
     public boolean canSplit() {
@@ -118,6 +130,10 @@ public class Gamestate {
         for (GameStateListener listener : listeners) {
             listener.onStateChanged();
         }
+    }
+
+    public Grid getGrid() {
+        return this.grid;
     }
 
 
