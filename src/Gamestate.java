@@ -29,6 +29,7 @@ public class Gamestate {
         Boolean newPositionIsAccessible = newPositionTile.isAccessibleBy(player.getPlayerForm());
         if (newPositionWithinBounds && newPositionIsAccessible) {
             player.setPlayerPosition(newPosition);
+            notifyListeners();
             //check if any compatible shard is at the new position so it can be collected
             for (Shard shard: shards) {
                 Boolean shardAtPlayerPosition = shard.getShardPosition().equals(newPosition);
@@ -69,6 +70,8 @@ public class Gamestate {
         merged = new Player (black.getPlayerPosition(), Form.GREY);
         black = null;
         white = null;
+        notifyListeners();
+
     }
 
     //return GreyPlayer
@@ -108,6 +111,7 @@ public class Gamestate {
         black = new Player (merged.getPlayerPosition(), Form.BLACK);
         white = new Player (merged.getPlayerPosition(), Form.WHITE);
         merged = null;
+        notifyListeners();
     }
 
     //checks if the entity can exit
