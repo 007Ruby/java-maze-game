@@ -13,40 +13,49 @@ public class GameView {
         this.game = game;
         this.root = root;
         draw();
-        drawPlayers();
     }
 
     public void draw() {
             root.getChildren().clear();
             drawGrid();
+            drawPlayers();
         }
 
         private void drawGrid() {
             for (int row = 0; row < game.grid.getHeight(); row++) {
                 for (int col = 0; col < game.grid.getWidth(); col++) {
-
-                    Rectangle tile = new Rectangle(
+                    //The tile being drawn on the grid
+                    Rectangle drawnTile = new Rectangle(
                             col * tileSize,
                             row * tileSize,
                             tileSize,
                             tileSize
                     );
+                    //The tile object in the backend
+                    Tile tile = game.getGrid().getTileAt(new Position(col, row));
 
-                    tile.setFill(Color.LIGHTGRAY);
-                    tile.setStroke(Color.BLACK);
+                    //Drawing the tile on the grid in correspondance to the object in the backend
+                    switch (tile.getTileType()) {
+                        case GREY -> drawnTile.setFill(Color.GRAY);
+                        case BLACK -> drawnTile.setFill(Color.BLACK);
+                        case WHITE -> drawnTile.setFill(Color.WHITE);
+                        case EXIT -> drawnTile.setFill(Color.GREEN);
+                        case WALL -> drawnTile.setFill(Color.DARKGRAY);
+                    }
+                    drawnTile.setStroke(Color.BLACK);
 
-                    root.getChildren().add(tile);
+                    root.getChildren().add(drawnTile);
                 }
             }
+            
         }
 
     private void drawPlayers() {
         Grid grid = game.getGrid();
         int tileSize = 80;
-        Position position = new Position(0,0);
-        Player player = new Player((position), Form.BLACK);
+        Player player = new Player((game.getMergedPlayer().getPlayerPosition()), Form.GREY);
 
-        // assume that the player will always be black for now
+        // assume that the player will always be grey for now
         if (game.areMerged()) {
             player = game.getMergedPlayer();
         }
@@ -57,7 +66,7 @@ public class GameView {
         double centerY = pos.getY() * tileSize + tileSize / 2.0;
 
         Circle robot = new Circle(centerX, centerY, tileSize / 3.0);
-        robot.setFill(Color.BLACK);
+        robot.setFill(Color.DARKGREY);
 
         root.getChildren().add(robot);
     }

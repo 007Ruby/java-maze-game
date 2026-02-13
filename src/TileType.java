@@ -5,13 +5,6 @@ enum TileType {
             return false;
         }
     },
-
-    NEUTRAL {
-        @Override 
-        public boolean isAccessibleBy(Form playerForm) {
-            return true;
-        }
-    },
     BLACK {
         @Override
         public boolean isAccessibleBy(Form playerForm) {
@@ -37,4 +30,7 @@ enum TileType {
         }
     };
     public abstract boolean isAccessibleBy(Form playerForm);
+    public TileType getTileType() {
+        return this;
+    };
 }

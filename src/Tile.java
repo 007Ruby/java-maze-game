@@ -8,7 +8,7 @@ public class Tile {
         return type.isAccessibleBy(playerForm);
     }
 
-    public TileType getType() {
+    public TileType getTileType() {
         return type;
     }
 

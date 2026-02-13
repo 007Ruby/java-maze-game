@@ -16,16 +16,17 @@ public class App extends Application {
 
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case W -> game.moveWhite(Direction.UP);
-                case S -> game.moveWhite(Direction.DOWN);
-                case A -> game.moveWhite(Direction.LEFT);
-                case D -> game.moveWhite(Direction.RIGHT);
+                case W -> game.moveMerged(Direction.UP);
+                case S -> game.moveMerged(Direction.DOWN);
+                case A -> game.moveMerged(Direction.LEFT);
+                case D -> game.moveMerged(Direction.RIGHT);
 
                 case M -> game.merge();
                 case SPACE -> game.split();
 
                 default -> {}
             }
+            view.draw();
         });
 
         stage.setScene(scene);

@@ -2,12 +2,12 @@ import java.util.*;
 public class DemoLevel {
     public static Gamestate create() {
         Tile[][] tiles = {
-            { new Tile(TileType.NEUTRAL), new Tile(TileType.BLACK), new Tile(TileType.EXIT) },
-            { new Tile(TileType.WALL),    new Tile(TileType.WHITE), new Tile(TileType.NEUTRAL) }
+            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY) },
+            { new Tile(TileType.GREY),    new Tile(TileType.GREY), new Tile(TileType.GREY) }
         };
 
         Grid grid = new Grid(tiles);
-        Player player = new Player(new Position(0, 0), Form.BLACK);
+        Player player = new Player(new Position(0, 0), Form.GREY);
 
         List<Shard> shards = List.of(
             new Shard(new Position(1, 0), Form.BLACK),

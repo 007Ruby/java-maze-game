@@ -87,7 +87,7 @@ public class Gamestate {
     //to be able to do so, they must be on a neutral tile
     public boolean canSplit() {
         if (merged == null) return false;
-        if (grid.getTileAt(merged.getPlayerPosition()).getType() == TileType.NEUTRAL) return true;
+        if (grid.getTileAt(merged.getPlayerPosition()).getTileType() == TileType.GREY) return true;
         return false;
     }
 
@@ -106,7 +106,7 @@ public class Gamestate {
         return key.isComplete() &&
         shards.isEmpty() &&
         merged != null  &&
-        grid.getTileAt(merged.getPlayerPosition()).getType() == TileType.EXIT;
+        grid.getTileAt(merged.getPlayerPosition()).getTileType() == TileType.EXIT;
     }
 
     public boolean isGameWon() {
