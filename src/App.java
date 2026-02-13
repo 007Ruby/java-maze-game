@@ -9,9 +9,10 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         Gamestate game = DemoLevel.create();
-
         Pane root = new Pane();
         Scene scene = new Scene(root, 800, 600);
+        GameView view = new GameView(game, root);
+
 
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
