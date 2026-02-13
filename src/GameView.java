@@ -19,6 +19,7 @@ public class GameView {
             root.getChildren().clear();
             drawGrid();
             drawPlayers();
+            drawShards();
         }
 
         private void drawGrid() {
@@ -36,7 +37,7 @@ public class GameView {
 
                     //Drawing the tile on the grid in correspondance to the object in the backend
                     switch (tile.getTileType()) {
-                        case GREY -> drawnTile.setFill(Color.GRAY);
+                        case GREY -> drawnTile.setFill(Color.GREY);
                         case BLACK -> drawnTile.setFill(Color.BLACK);
                         case WHITE -> drawnTile.setFill(Color.WHITE);
                         case EXIT -> drawnTile.setFill(Color.GREEN);
@@ -69,6 +70,28 @@ public class GameView {
         robot.setFill(Color.DARKGREY);
 
         root.getChildren().add(robot);
+    }
+
+    private void drawShards() {
+
+        for (Shard shard : game.getShards()) {
+
+            Position pos = shard.getShardPosition();
+
+            double centerX = pos.getX() * tileSize + tileSize / 2.0;
+            double centerY = pos.getY() * tileSize + tileSize / 2.0;
+
+            Circle shardCircle = new Circle(centerX, centerY, tileSize / 6.0);
+
+            // Color based on shard form
+            switch (shard.getShardForm()) {
+                case BLACK -> shardCircle.setFill(Color.BLACK);
+                case WHITE -> shardCircle.setFill(Color.WHITE);
+                case GREY -> shardCircle.setFill(Color.DARKGREY);
+            }
+
+            root.getChildren().add(shardCircle);
+        }
     }
 
 

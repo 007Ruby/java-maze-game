@@ -83,6 +83,10 @@ public class Gamestate {
         return null;
     }
 
+    public List<Shard> getShards() {
+        return shards;
+    }
+
     //checks if entities can split
     //to be able to do so, they must be on a neutral tile
     public boolean canSplit() {

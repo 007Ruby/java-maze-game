@@ -10,8 +10,8 @@ public class DemoLevel {
         Player player = new Player(new Position(0, 0), Form.GREY);
 
         List<Shard> shards = List.of(
-            new Shard(new Position(1, 0), Form.BLACK),
-            new Shard(new Position(1, 1), Form.WHITE)
+            new Shard(new Position(1, 0), Form.GREY),
+            new Shard(new Position(1, 1), Form.GREY)
         );
 
         Key key = new Key(2);
