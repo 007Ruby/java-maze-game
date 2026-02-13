@@ -10,11 +10,11 @@ public class Gamestate {
     Player merged;
     List<Shard> shards;
     Key key;
-    public Gamestate(Grid grid, Player merged, List<Shard> shards, Key key) {
+    public Gamestate(Grid grid, Player white, Player black, List<Shard> shards, Key key) {
         this.grid = grid;
-        this.merged = merged;
-        this.white = null;
-        this.black = null;
+        this.merged = null;
+        this.white = white;
+        this.black = black;
         this.shards = shards;
         this.key = key;
     }
@@ -71,16 +71,22 @@ public class Gamestate {
         white = null;
     }
 
-    //returns if the players are merged
-    public boolean areMerged() {
-        return merged != null;
-    }
-
     //return GreyPlayer
     public Player getMergedPlayer() {
-        if(areMerged()) 
-            {return this.merged;}
-        return null;
+        if((merged == null)) return null;
+        return merged;
+    }
+
+    //return white player
+    public Player getWhitePlayer() {
+        if((white == null)) return null;
+        return white;
+    }
+
+    //return black player 
+    public Player getBlackPlayer() {
+        if((black == null)) return null;
+        return black;
     }
 
     public List<Shard> getShards() {

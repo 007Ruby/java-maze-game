@@ -54,24 +54,29 @@ public class GameView {
         }
 
     private void drawPlayers() {
-        Grid grid = game.getGrid();
-        int tileSize = 80;
-        Player player = new Player((game.getMergedPlayer().getPlayerPosition()), Form.GREY);
 
-        // assume that the player will always be grey for now
-        if (game.areMerged()) {
-            player = game.getMergedPlayer();
-        }
+    int tileSize = 80;
 
+    placePlayer(game.getMergedPlayer(), tileSize);
+    placePlayer(game.getWhitePlayer(), tileSize);
+    placePlayer(game.getBlackPlayer(), tileSize);
+}
+
+    private void placePlayer (Player player, int tileSize) {
+        if (player == null) return;
         Position pos = player.getPlayerPosition();
 
         double centerX = pos.getX() * tileSize + tileSize / 2.0;
         double centerY = pos.getY() * tileSize + tileSize / 2.0;
 
-        Circle robot = new Circle(centerX, centerY, tileSize / 3.0);
-        robot.setFill(Color.DARKGREY);
-
-        root.getChildren().add(robot);
+        Circle playerCircle = new Circle(centerX, centerY, tileSize / 3.0);
+        
+        switch (player.getPlayerForm()) {
+                case BLACK -> playerCircle.setFill(Color.BLACK);
+                case WHITE -> playerCircle.setFill(Color.WHITE);
+                case GREY -> playerCircle.setFill(Color.DARKGREY);
+            }
+        root.getChildren().add(playerCircle);
     }
 
     private void drawShards() {

@@ -7,15 +7,18 @@ public class DemoLevel {
         };
 
         Grid grid = new Grid(tiles);
-        Player player = new Player(new Position(0, 0), Form.GREY);
+        Player black = new Player(new Position(0, 0), Form.BLACK);
+        Player white = new Player(new Position(1, 0), Form.WHITE);
 
         List<Shard> shards = List.of(
             new Shard(new Position(1, 0), Form.GREY),
-            new Shard(new Position(1, 1), Form.GREY)
+            new Shard(new Position(1, 1), Form.GREY),
+            new Shard(new Position(4, 1), Form.BLACK),
+            new Shard(new Position(3, 0), Form.WHITE)
         );
 
-        Key key = new Key(2);
+        Key key = new Key(4);
 
-        return new Gamestate(grid, player, new ArrayList<>(shards), key);
+        return new Gamestate(grid, white, black, new ArrayList<>(shards), key);
     }
 }

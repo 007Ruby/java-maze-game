@@ -14,21 +14,48 @@ public class App extends Application {
         GameView view = new GameView(game, root);
 
 
-        scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case W -> game.moveMerged(Direction.UP);
-                case S -> game.moveMerged(Direction.DOWN);
-                case A -> game.moveMerged(Direction.LEFT);
-                case D -> game.moveMerged(Direction.RIGHT);
+    scene.setOnKeyPressed(e -> {
+        switch (e.getCode()) {
 
-                case M -> game.merge();
-                case SPACE -> game.split();
-
-                default -> {}
+            case UP -> {
+                if (game.getMergedPlayer() != null)
+                    game.moveMerged(Direction.UP);
+                else
+                    game.moveBlack(Direction.UP);
             }
-            view.draw();
-        });
 
+            case DOWN -> {
+                if (game.getMergedPlayer() != null)
+                    game.moveMerged(Direction.DOWN);
+                else
+                    game.moveBlack(Direction.DOWN);
+            }
+
+            case LEFT -> {
+                if (game.getMergedPlayer() != null)
+                    game.moveMerged(Direction.LEFT);
+                else
+                    game.moveBlack(Direction.LEFT);
+            }
+
+            case RIGHT -> {
+                if (game.getMergedPlayer() != null)
+                    game.moveMerged(Direction.RIGHT);
+                else
+                    game.moveBlack(Direction.RIGHT);
+            }
+
+            case W -> game.moveWhite(Direction.UP);
+            case S -> game.moveWhite(Direction.DOWN);
+            case A -> game.moveWhite(Direction.LEFT);
+            case D -> game.moveWhite(Direction.RIGHT);
+
+            case M -> game.merge();
+            case SPACE -> game.split();
+        }
+
+        view.draw();
+    });
         stage.setScene(scene);
         stage.show();
     }

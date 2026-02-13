@@ -20,7 +20,7 @@ enum TileType {
     GREY {
         @Override
         public boolean isAccessibleBy(Form playerForm) {
-            return playerForm == Form.GREY;
+            return (playerForm == Form.GREY || playerForm == Form.BLACK || playerForm == Form.WHITE) ;
         }
     },
     EXIT {
