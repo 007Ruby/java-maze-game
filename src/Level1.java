@@ -1,6 +1,7 @@
 import java.util.*;
-public class DemoLevel {
-    public static Gamestate create() {
+public class Level1 implements Level {
+    @Override
+    public Gamestate create() {
         Tile[][] tiles = {
             { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.EXIT) },
             { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY),    new Tile(TileType.GREY), new Tile(TileType.GREY) }

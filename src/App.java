@@ -10,7 +10,9 @@ public class App extends Application {
     public void start(Stage stage) {
         Gamestate game = DemoLevel.create();
         Pane root = new Pane();
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root,
+        game.getGrid().getWidth() * 80,
+        game.getGrid().getHeight() * 80);
         GameView view = new GameView(game, root);
 
 
