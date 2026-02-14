@@ -25,10 +25,18 @@ public class GameView {
     private double renderMergedX, renderMergedY;
     private double renderBlackX, renderBlackY;
     private double renderWhiteX, renderWhiteY;
+    private boolean isMerged;
+    private boolean wasMerged;
+    private boolean sameTile;
+    private double targetBlackX, targetBlackY;
+    private double targetWhiteX, targetWhiteY;
+    private double targetMergedX, targetMergedY;
 
     public GameView(Gamestate game, Pane root) {
         this.game = game;
         this.root = root;
+        wasMerged = false;
+        sameTile = false;
         root.getChildren().addAll(staticLayer, dynamicLayer);
         playerSetup();
         animationTimer.start();
@@ -241,74 +249,138 @@ public class GameView {
         return new ImagePattern(image);
     }
 
+        //simply updates logica state as per gameState logic
+    private void updateLogicalState(){
+        wasMerged = isMerged;
+        isMerged = game.getMergedPlayer() != null;
+
+        if (!isMerged &&
+            game.getBlackPlayer() != null &&
+            game.getWhitePlayer() != null) {
+
+            sameTile = game.getBlackPlayer()
+                        .getPlayerPosition()
+                        .equals(game.getWhitePlayer().getPlayerPosition());
+        } else {
+            sameTile = false;
+        }
+    }
+
+    //updates player target positions
+    private void updateRenderTargets() {
+
+        if (isMerged) {
+
+            Position pos = game.getMergedPlayer().getPlayerPosition();
+            targetMergedX = pos.getX() * tileSize + tileSize / 2.0;
+            targetMergedY = pos.getY() * tileSize + tileSize / 2.0;
+
+        } else {
+
+            Position blackPos = game.getBlackPlayer().getPlayerPosition();
+            Position whitePos = game.getWhitePlayer().getPlayerPosition();
+
+            double baseBlackX = blackPos.getX() * tileSize + tileSize / 2.0;
+            double baseWhiteX = whitePos.getX() * tileSize + tileSize / 2.0;
+
+            targetBlackX = baseBlackX;
+            targetWhiteX = baseWhiteX;
+
+            if (sameTile) {
+                targetBlackX -= tileSize / 6.0;
+                targetWhiteX += tileSize / 6.0;
+            }
+
+            targetBlackY = blackPos.getY() * tileSize + tileSize / 2.0;
+            targetWhiteY = whitePos.getY() * tileSize + tileSize / 2.0;
+        }
+    }
+
+    //applies interpolation
+    private void interpolate() {
+
+        double speed = 0.2;
+
+        if (isMerged) {
+
+            if (isMerged != wasMerged) {
+                renderMergedX = targetMergedX;
+                renderMergedY = targetMergedY;
+            }
+
+            renderMergedX += (targetMergedX - renderMergedX) * speed;
+            renderMergedY += (targetMergedY - renderMergedY) * speed;
+
+        } else {
+
+            if (isMerged != wasMerged) {
+                renderBlackX = targetBlackX;
+                renderBlackY = targetBlackY;
+                renderWhiteX = targetWhiteX;
+                renderWhiteY = targetWhiteY;
+            }
+
+            renderBlackX += (targetBlackX - renderBlackX) * speed;
+            renderBlackY += (targetBlackY - renderBlackY) * speed;
+
+            renderWhiteX += (targetWhiteX - renderWhiteX) * speed;
+            renderWhiteY += (targetWhiteY - renderWhiteY) * speed;
+        }
+    }
+
+    //applies to players
+    private void applyToNodes() {
+
+        if (isMerged) {
+
+            mergedCircle.setVisible(true);
+            blackCircle.setVisible(false);
+            whiteCircle.setVisible(false);
+
+            mergedCircle.setCenterX(renderMergedX);
+            mergedCircle.setCenterY(renderMergedY);
+
+        } else {
+
+            mergedCircle.setVisible(false);
+            blackCircle.setVisible(true);
+            whiteCircle.setVisible(true);
+
+            if (sameTile) {
+                blackCircle.setRadius(tileSize / 5.0);
+                whiteCircle.setRadius(tileSize / 5.0);
+            } else {
+                blackCircle.setRadius(tileSize / 4.0);
+                whiteCircle.setRadius(tileSize / 4.0);
+            }
+
+            blackCircle.setCenterX(renderBlackX);
+            blackCircle.setCenterY(renderBlackY);
+
+            whiteCircle.setCenterX(renderWhiteX);
+            whiteCircle.setCenterY(renderWhiteY);
+        }
+    }
+
+
+    private void updatePlayers() {
+            updateLogicalState();
+            updateRenderTargets();
+            interpolate();
+            applyToNodes();
+        }
+
     private AnimationTimer animationTimer = new AnimationTimer() {
         @Override
         public void handle(long now) {
             time += 0.05;
             updatePlayers();
             draw();
-            
         }
     };
 
 
-    private void updatePlayers() {
-        double speed = 0.2; 
-
-        if (game.getMergedPlayer() == null && (game.getWhitePlayer().getPlayerPosition().equals(game.getBlackPlayer().getPlayerPosition()))) {
-            mergedCircle.setVisible(true);
-            blackCircle.setVisible(false);
-            whiteCircle.setVisible(false);
-            blackCircle.setRadius(tileSize / 5.0);
-            whiteCircle.setRadius(tileSize / 5.0);
-            blackCircle.setCenterX(blackCircle.getCenterX() + 15);
-            whiteCircle.setCenterX(blackCircle.getCenterX() - 15);
-        }
-        
-        if (game.getMergedPlayer() != null) {
-            mergedCircle.setVisible(true);
-            blackCircle.setVisible(false);
-            whiteCircle.setVisible(false);
-            Position pos = game.getMergedPlayer().getPlayerPosition();
-            double targetX = pos.getX() * tileSize + tileSize / 2.0;
-            double targetY = pos.getY() * tileSize + tileSize / 2.0;
-            renderMergedX += (targetX - renderMergedX) * speed;
-            renderMergedY += (targetY - renderMergedY) * speed;
-
-            mergedCircle.setCenterX(renderMergedX);
-            mergedCircle.setCenterY(renderMergedY);
-        }
-
-        if (game.getBlackPlayer() != null) {
-            mergedCircle.setVisible(false);
-            blackCircle.setVisible(true);
-            whiteCircle.setVisible(true);
-            Position pos = game.getBlackPlayer().getPlayerPosition();
-            double targetX = pos.getX() * tileSize + tileSize / 2.0;
-            double targetY = pos.getY() * tileSize + tileSize / 2.0;
-
-            renderBlackX += (targetX - renderBlackX) * speed;
-            renderBlackY += (targetY - renderBlackY) * speed;
-
-            blackCircle.setCenterX(renderBlackX);
-            blackCircle.setCenterY(renderBlackY);
-        }
-
-        if (game.getWhitePlayer() != null) {
-            mergedCircle.setVisible(false);
-            blackCircle.setVisible(true);
-            whiteCircle.setVisible(true);
-            Position pos = game.getWhitePlayer().getPlayerPosition();
-            double targetX = pos.getX() * tileSize + tileSize / 2.0;
-            double targetY = pos.getY() * tileSize + tileSize / 2.0;
-
-            renderWhiteX += (targetX - renderWhiteX) * speed;
-            renderWhiteY += (targetY - renderWhiteY) * speed;
-
-            whiteCircle.setCenterX(renderWhiteX);
-            whiteCircle.setCenterY(renderWhiteY);
-        }
-    }
+    
 
 
 
