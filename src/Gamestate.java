@@ -184,5 +184,13 @@ public class Gamestate {
         return this.grid;
     }
 
+    public int getCollectedShardCount() {
+        return key.getCollectedShardCount();
+    }
+
+    public int getTotalShardCount() {
+        return key.getRequiredShardCount();
+    }
+
 
 }

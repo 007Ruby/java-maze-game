@@ -17,4 +17,12 @@ public class Key {
         collectedShards += 1;
     }
 
+    public int getCollectedShardCount() {
+        return this.collectedShards;
+    }
+
+    public int getRequiredShardCount() {
+        return this.requiredCount;
+    }
+
 }

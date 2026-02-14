@@ -23,6 +23,7 @@ public class GameView {
             drawShards();
             checkForWin();
             checkForLoss();
+            displayShardCount();
         }
 
         private void drawGrid() {
@@ -112,15 +113,22 @@ public class GameView {
         );
         overlay.setFill(Color.color(0, 0, 0, 0.6));
 
-        Text winText = new Text (
-            100,
-            100,
-            "YOU WIN"
-        );
-        winText.setFill(Color.WHITE);
-        winText.setStyle("-fx-font-size: 40px;");
+        Text wonText = new Text(
+                100,
+                100,
+                "YOU WON"
+            );
+            wonText.setFill(Color.WHITE);
+            wonText.setStyle("-fx-font-size: 40px;");
 
-        root.getChildren().addAll(overlay, winText);
+            Text restartText = new Text(
+                100,
+                140,
+                "Press R to Restart"
+            );
+            restartText.setFill(Color.WHITE);
+            restartText.setStyle("-fx-font-size: 18px;");
+            root.getChildren().addAll(overlay, wonText, restartText);
     }
     }
 
@@ -151,6 +159,17 @@ public class GameView {
             restartText.setStyle("-fx-font-size: 18px;");
             root.getChildren().addAll(overlay, loseText, restartText);
         }
+    }
+
+    public void displayShardCount() {
+        Text shardCounter = new Text(
+            10,
+            12,
+            "Shards: " + game.getCollectedShardCount() + " / " + game.getTotalShardCount()
+        );
+        shardCounter.setFill(Color.WHITE);
+        shardCounter.setStyle("-fx-font-size: 12px;");
+        root.getChildren().add(shardCounter);
     }
 
     public void setGame(Gamestate game) {
