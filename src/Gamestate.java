@@ -4,26 +4,39 @@ public class Gamestate {
     private List<GameStateListener> listeners = new ArrayList<>();
     private GameStatus status = GameStatus.PLAYING;
     private boolean showExitWarning = false;
+    private boolean tutorialMode = false;
+    private String tutorialMessage = null;
+    private int tutorialStep = 1;
+
     Grid grid;
     Player black;
     Player white;
     Player merged;
     List<Shard> shards;
     Key key;
-    public Gamestate(Grid grid, Player white, Player black, List<Shard> shards, Key key) {
+    public Gamestate(Grid grid, Player merged, List<Shard> shards, Key key) {
         this.grid = grid;
-        this.merged = null;
-        this.white = white;
-        this.black = black;
+        this.merged = merged;
+        this.white = null;
+        this.black = null;
         this.shards = shards;
         this.key = key;
     }
 
+   public void enableTutorialMode() {
+        tutorialMode = true;
+        tutorialMessage = "Use arrow keys to move\nUse SPACE to split & M to merge";
+    }
+
+    public String getTutorialMessage() {
+        return tutorialMessage;
+    }
     //checks grid bounds
     //moves player
     //checks and updates status 
     public void applyInstruction (Player player, Direction d) {
         if (status != GameStatus.PLAYING) return;
+        tutorialModeManger();
         Position current = player.getPlayerPosition();
         Position next = current.move(d);
 
@@ -46,6 +59,16 @@ public class Gamestate {
 
         notifyListeners();
     
+    }
+
+    public void tutorialModeManger() {
+        if (tutorialMode && tutorialStep == 1) {
+            tutorialStep = 2;
+            tutorialMessage = "Use A,S,W,D to move WHITE player\nCollect all shards & merge before exit";
+        } else if (tutorialMode && tutorialStep == 2) {
+            tutorialMessage = null;
+            tutorialMode = false;
+        }
     }
 
     //if merged player is at the exit, check if the key is complete

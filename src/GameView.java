@@ -25,6 +25,15 @@ public class GameView {
             checkForLoss();
             displayShardCount();
             drawExitWarning();
+            drawTutorialMessage();
+        }
+        private void drawTutorialMessage() {
+            if (game.getTutorialMessage() == null) return;
+            String message = game.getTutorialMessage();
+            Text text = new Text(30, 80, message);
+            text.setFill(Color.NAVY);
+            text.setStyle("-fx-font-size: 18px;");
+            root.getChildren().add(text);
         }
 
         private void drawGrid() {

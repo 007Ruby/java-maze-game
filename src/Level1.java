@@ -8,8 +8,7 @@ public class Level1 implements Level {
         };
 
         Grid grid = new Grid(tiles);
-        Player black = new Player(new Position(0, 0), Form.BLACK);
-        Player white = new Player(new Position(1, 0), Form.WHITE);
+        Player merged = new Player(new Position(0, 0), Form.GREY);
 
         List<Shard> shards = List.of(
             new Shard(new Position(1, 0), Form.GREY),
@@ -19,7 +18,8 @@ public class Level1 implements Level {
         );
 
         Key key = new Key(4);
-
-        return new Gamestate(grid, white, black, new ArrayList<>(shards), key);
+        Gamestate game = new Gamestate(grid, merged, new ArrayList<>(shards), key);
+        game.enableTutorialMode(); 
+        return game;
     }
 }
