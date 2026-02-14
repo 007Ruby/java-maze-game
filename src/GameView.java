@@ -3,6 +3,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
+import javafx.scene.image.WritableImage;
 
 public class GameView {
 
@@ -55,7 +60,11 @@ public class GameView {
                         case BLACK -> drawnTile.setFill(Color.BLACK);
                         case WHITE -> drawnTile.setFill(Color.WHITE);
                         case EXIT -> drawnTile.setFill(Color.GREEN);
-                        case WALL -> drawnTile.setFill(Color.DARKGRAY);
+                        case WALL -> {
+                            drawnTile.setFill(createStripedWallPattern(tileSize));
+                            drawnTile.setStroke(Color.BLACK);
+                            drawnTile.setStrokeWidth(2);
+                        }
                     }
                     drawnTile.setStroke(Color.BLACK);
 
@@ -128,33 +137,35 @@ public class GameView {
     }
 
     //if all winning requirements have been met, visuals will refelct winning
-    public void checkForWin() {
-        if (game.getStatus() == GameStatus.WON) {
+   public void checkForWin() {
+        if (game.getStatus() != GameStatus.WON) return;
 
-        Rectangle overlay = new Rectangle(
-            game.getGrid().getWidth() * tileSize,
-            game.getGrid().getHeight() * tileSize
-        );
+        double width = game.getGrid().getWidth() * tileSize;
+        double height = game.getGrid().getHeight() * tileSize;
+
+        Rectangle overlay = new Rectangle(width, height);
         overlay.setFill(Color.color(0, 0, 0, 0.6));
 
-        Text wonText = new Text(
-                100,
-                100,
-                "YOU WON"
-            );
-            wonText.setFill(Color.WHITE);
-            wonText.setStyle("-fx-font-size: 40px;");
+        Text wonText = new Text("YOU WON");
+        wonText.setFill(Color.WHITE);
+        wonText.setStyle("-fx-font-size: 40px;");
+        wonText.setX((width - wonText.getLayoutBounds().getWidth()) / 2);
+        wonText.setY(height / 2 - 20);
 
-            Text restartText = new Text(
-                100,
-                140,
-                "Press R to Restart"
-            );
-            restartText.setFill(Color.WHITE);
-            restartText.setStyle("-fx-font-size: 18px;");
-            root.getChildren().addAll(overlay, wonText, restartText);
-    }
-    }
+        Text restartText = new Text("Press R to Restart");
+        restartText.setFill(Color.WHITE);
+        restartText.setStyle("-fx-font-size: 18px;");
+        restartText.setX((width - restartText.getLayoutBounds().getWidth()) / 2);
+        restartText.setY(height / 2 + 10);
+
+        Text nextText = new Text("Press N for Next Level");
+        nextText.setFill(Color.WHITE);
+        nextText.setStyle("-fx-font-size: 18px;");
+        nextText.setX((width - nextText.getLayoutBounds().getWidth()) / 2);
+        nextText.setY(height / 2 + 35);
+
+        root.getChildren().addAll(overlay, wonText, restartText, nextText);
+}
 
       //if all winning requirements have been met, visuals will refelct winning
     public void checkForLoss() {
@@ -198,6 +209,30 @@ public class GameView {
 
     public void setGame(Gamestate game) {
         this.game = game;
+    }
+
+    //allows for the creation of triepd tiles for walls
+    private Paint createStripedWallPattern(int tileSize) {
+
+        Canvas canvas = new Canvas(tileSize, tileSize);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        // Base color
+        gc.setFill(Color.DARKSLATEGRAY);
+        gc.fillRect(0, 0, tileSize, tileSize);
+
+        // Stripes
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(4);
+
+        for (int i = -tileSize; i < tileSize * 2; i += 12) {
+            gc.strokeLine(i, 0, i - tileSize, tileSize);
+        }
+
+        WritableImage image = new WritableImage(tileSize, tileSize);
+        canvas.snapshot(null, image);
+
+        return new ImagePattern(image);
     }
 
 

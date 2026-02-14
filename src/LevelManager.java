@@ -6,7 +6,7 @@ public class LevelManager {
 
     public LevelManager() {
         levels = List.of(
-            new Level1()
+            new Level1(), new Level2(), new Level3()
         );
         currentLevelIndex = 0;
     }

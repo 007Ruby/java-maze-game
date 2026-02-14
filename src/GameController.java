@@ -1,4 +1,5 @@
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
@@ -8,11 +9,13 @@ public class GameController {
     private GameView view;
     private LevelManager levelManager;
     private Pane root;
+    private Stage stage;
 
-    public GameController() {
+    public GameController(Stage stage) {
         levelManager = new LevelManager();
         game = levelManager.loadCurrentLevel();
         root = new Pane();
+        this.stage = stage;
         view = new GameView(game, root);
 
         game.addListener(() -> view.draw());
@@ -35,7 +38,24 @@ public class GameController {
             case M -> game.merge();
             case SPACE -> game.split();
             case R -> restartLevel();
+            case N -> nextLevel();
         }
+    }
+
+    private void nextLevel() {
+        levelManager.nextLevel();
+        game = levelManager.loadCurrentLevel();
+        view.setGame(game);
+        game.addListener(() -> view.draw());
+
+        int tileSize = 80;
+        int width = game.getGrid().getWidth() * tileSize;
+        int height = game.getGrid().getHeight() * tileSize;
+
+        stage.setWidth(width);
+        stage.setHeight(height);
+
+        view.draw();
     }
 
     private void restartLevel() {

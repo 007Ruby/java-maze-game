@@ -8,7 +8,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameController controller = new GameController();
+        GameController controller = new GameController(stage);
         Scene scene = controller.createScene();
         stage.setScene(scene);
         stage.show();
