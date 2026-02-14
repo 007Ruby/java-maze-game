@@ -24,6 +24,7 @@ public class GameView {
             checkForWin();
             checkForLoss();
             displayShardCount();
+            drawExitWarning();
         }
 
         private void drawGrid() {
@@ -79,6 +80,20 @@ public class GameView {
                 case GREY -> {playerCircle.setFill(Color.DARKGREY); playerCircle.setStroke(Color.BLACK);}
             }
         root.getChildren().add(playerCircle);
+    }
+
+    public void drawExitWarning() {
+        if (game.shouldShowExitWarning()) {
+            Text warning = new Text(
+                100,
+                60,
+                "Collect all shards to exit!"
+            );
+            warning.setFill(Color.RED);
+            warning.setStyle("-fx-font-size: 20px;");
+            warning.setOpacity(0.9);
+            root.getChildren().add(warning);
+        }
     }
 
     private void drawShards() {

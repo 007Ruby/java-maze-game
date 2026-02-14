@@ -3,6 +3,7 @@ import java.util.*;
 public class Gamestate {
     private List<GameStateListener> listeners = new ArrayList<>();
     private GameStatus status = GameStatus.PLAYING;
+    private boolean showExitWarning = false;
     Grid grid;
     Player black;
     Player white;
@@ -35,6 +36,8 @@ public class Gamestate {
 
         collectShardIfPresent(player, next);
 
+        checkKeyCompletionAtExit();
+
         if (tile.isDeadlyFor(player.getPlayerForm())) {
             status = GameStatus.LOST;
         } else if (canExit()) {
@@ -45,6 +48,23 @@ public class Gamestate {
     
     }
 
+    //if merged player is at the exit, check if the key is complete
+    //if key is not complete, display a message
+    public void checkKeyCompletionAtExit() {
+        if (merged != null &&
+            grid.getTileAt(merged.getPlayerPosition()).getTileType() == TileType.EXIT &&
+            !key.isComplete()) {
+            showExitWarning = true;
+        } else {
+            showExitWarning = false;
+        }
+    }
+
+    //shows exit warning if requried
+    public boolean shouldShowExitWarning() {
+        return showExitWarning;
+    }
+    
     //moves player if tile is accessible
     public void movePlayer(Player player, Position newPosition) {
          player.setPlayerPosition(newPosition);
