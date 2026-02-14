@@ -3,8 +3,8 @@ public class Level1 implements Level {
     @Override
     public Gamestate create() {
         Tile[][] tiles = {
-            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.EXIT) },
-            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY),    new Tile(TileType.GREY), new Tile(TileType.GREY) }
+            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.WHITE), new Tile(TileType.GREY), new Tile(TileType.EXIT) },
+            { new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY), new Tile(TileType.GREY),    new Tile(TileType.BLACK), new Tile(TileType.GREY) }
         };
 
         Grid grid = new Grid(tiles);

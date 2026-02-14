@@ -7,6 +7,9 @@ public class Tile {
     public boolean isAccessibleBy(Form playerForm) {
         return type.isAccessibleBy(playerForm);
     }
+    public boolean isDeadlyFor(Form PlayerForm) {
+        return type.isDeadlyFor(PlayerForm);
+    }
 
     public TileType getTileType() {
         return type;

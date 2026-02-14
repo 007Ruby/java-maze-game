@@ -22,6 +22,7 @@ public class GameView {
             drawPlayers();
             drawShards();
             checkForWin();
+            checkForLoss();
         }
 
         private void drawGrid() {
@@ -72,9 +73,9 @@ public class GameView {
         Circle playerCircle = new Circle(centerX, centerY, tileSize / 3.0);
         
         switch (player.getPlayerForm()) {
-                case BLACK -> playerCircle.setFill(Color.BLACK);
-                case WHITE -> playerCircle.setFill(Color.WHITE);
-                case GREY -> playerCircle.setFill(Color.DARKGREY);
+                case BLACK -> {playerCircle.setFill(Color.BLACK); playerCircle.setStroke(Color.WHITE);}
+                case WHITE -> {playerCircle.setFill(Color.WHITE); playerCircle.setStroke(Color.BLACK);}
+                case GREY -> {playerCircle.setFill(Color.DARKGREY); playerCircle.setStroke(Color.BLACK);}
             }
         root.getChildren().add(playerCircle);
     }
@@ -92,9 +93,9 @@ public class GameView {
 
             // Color based on shard form
             switch (shard.getShardForm()) {
-                case BLACK -> shardCircle.setFill(Color.BLACK);
-                case WHITE -> shardCircle.setFill(Color.WHITE);
-                case GREY -> shardCircle.setFill(Color.DARKGREY);
+                case BLACK -> {shardCircle.setFill(Color.BLACK); shardCircle.setStroke(Color.WHITE);}
+                case WHITE -> {shardCircle.setFill(Color.WHITE); shardCircle.setStroke(Color.BLACK);}
+                case GREY -> {shardCircle.setFill(Color.DARKGREY); shardCircle.setStroke(Color.BLACK);}
             }
 
             root.getChildren().add(shardCircle);
@@ -115,6 +116,28 @@ public class GameView {
             100,
             100,
             "YOU WIN"
+        );
+        winText.setFill(Color.WHITE);
+        winText.setStyle("-fx-font-size: 40px;");
+
+        root.getChildren().addAll(overlay, winText);
+    }
+    }
+
+      //if all winning requirements have been met, visuals will refelct winning
+    public void checkForLoss() {
+        if (game.getStatus() == GameStatus.LOST) {
+
+        Rectangle overlay = new Rectangle(
+            game.getGrid().getWidth() * tileSize,
+            game.getGrid().getHeight() * tileSize
+        );
+        overlay.setFill(Color.color(0, 0, 0, 0.6));
+
+        Text winText = new Text (
+            100,
+            100,
+            "YOU LOST"
         );
         winText.setFill(Color.WHITE);
         winText.setStyle("-fx-font-size: 40px;");

@@ -1,4 +1,5 @@
 public enum GameStatus {
     PLAYING,
-    WON
+    WON,
+    LOST
 }

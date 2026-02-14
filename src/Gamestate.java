@@ -1,9 +1,8 @@
 import java.util.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.KeyCode;
 
 public class Gamestate {
     private List<GameStateListener> listeners = new ArrayList<>();
+    private GameStatus status = GameStatus.PLAYING;
     Grid grid;
     Player black;
     Player white;
@@ -18,17 +17,36 @@ public class Gamestate {
         this.shards = shards;
         this.key = key;
     }
-    public void movePlayer (Player player, Direction d) {
-        //find the player's new position 
-        Position playerPosition = player.getPlayerPosition();
-        Position newPosition = playerPosition.move(d);
-        Tile newPositionTile = grid.getTileAt(newPosition);
-        //check that the new position is within the bounds of the grid
-        Boolean newPositionWithinBounds = grid.isWithinBounds(newPosition);
-        //and check that the player has tile accessibility to that position
-        Boolean newPositionIsAccessible = newPositionTile.isAccessibleBy(player.getPlayerForm());
-        if (newPositionWithinBounds && newPositionIsAccessible) {
-            player.setPlayerPosition(newPosition);
+
+    //checks grid bounds
+    //moves player
+    //checks and updates status 
+    public void applyInstruction (Player player, Direction d) {
+        Position current = player.getPlayerPosition();
+        Position next = current.move(d);
+
+        if (!grid.isWithinBounds(next)) return;
+        Tile tile = grid.getTileAt(next);
+        if (!tile.isAccessibleBy(player.getPlayerForm())) return;
+
+        // Now we know movement is valid
+        player.setPlayerPosition(next);
+
+        collectShardIfPresent(player, next);
+
+        if (tile.isDeadlyFor(player.getPlayerForm())) {
+            status = GameStatus.LOST;
+        } else if (canExit()) {
+            status = GameStatus.WON;
+        }
+
+        notifyListeners();
+    
+    }
+
+    //moves player if tile is accessible
+    public void movePlayer(Player player, Position newPosition) {
+         player.setPlayerPosition(newPosition);
             notifyListeners();
             //check if any compatible shard is at the new position so it can be collected
             for (Shard shard: shards) {
@@ -41,19 +59,32 @@ public class Gamestate {
                     break;
                 }
             }
+    }
+
+    private void collectShardIfPresent(Player player, Position position) {
+        Iterator<Shard> it = shards.iterator();
+        while (it.hasNext()) {
+            Shard shard = it.next();
+            if (shard.getShardPosition().equals(position) &&
+                shard.getShardForm().equals(player.getPlayerForm())) {
+
+                key.addShardToKey();
+                it.remove();
+                break;
+            }
         }
     }
 
     public void moveBlack(Direction dir) {
-        if (black != null) movePlayer(black, dir);
+        if (black != null) applyInstruction(black, dir);
     }
 
     public void moveWhite(Direction dir) {
-        if (white != null) movePlayer(white, dir);
+        if (white != null) applyInstruction(white, dir);
     }
 
     public void moveMerged(Direction dir) {
-        if (merged != null) movePlayer(merged, dir);
+        if (merged != null) applyInstruction(merged, dir);
     }
     //checks if black and white entities can merge
     //to do so, they must be at the same position
@@ -131,8 +162,7 @@ public class Gamestate {
     }
 
     public GameStatus getStatus() {
-        if (canExit()) return GameStatus.WON;
-        return GameStatus.PLAYING;
+        return status;
     }
 
     public interface GameStateListener {
