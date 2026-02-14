@@ -14,7 +14,7 @@ public class GameController {
         game = levelManager.loadCurrentLevel();
         root = new Pane();
         view = new GameView(game, root);
-        
+
         game.addListener(() -> view.draw());
     }
 
@@ -34,7 +34,15 @@ public class GameController {
 
             case M -> game.merge();
             case SPACE -> game.split();
+            case R -> restartLevel();
         }
+    }
+
+    private void restartLevel() {
+        game = levelManager.loadCurrentLevel();
+        view.setGame(game);          
+        game.addListener(() -> view.draw());
+        view.draw();
     }
 
     private void movePrimary(Direction dir) {

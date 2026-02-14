@@ -128,22 +128,34 @@ public class GameView {
     public void checkForLoss() {
         if (game.getStatus() == GameStatus.LOST) {
 
-        Rectangle overlay = new Rectangle(
-            game.getGrid().getWidth() * tileSize,
-            game.getGrid().getHeight() * tileSize
-        );
-        overlay.setFill(Color.color(0, 0, 0, 0.6));
+            Rectangle overlay = new Rectangle(
+                game.getGrid().getWidth() * tileSize,
+                game.getGrid().getHeight() * tileSize
+            );
+            overlay.setFill(Color.color(0, 0, 0, 0.6));
 
-        Text winText = new Text (
-            100,
-            100,
-            "YOU LOST"
-        );
-        winText.setFill(Color.WHITE);
-        winText.setStyle("-fx-font-size: 40px;");
+            Text loseText = new Text(
+                100,
+                100,
+                "YOU LOST"
+            );
+            loseText.setFill(Color.WHITE);
+            loseText.setStyle("-fx-font-size: 40px;");
 
-        root.getChildren().addAll(overlay, winText);
+            Text restartText = new Text(
+                100,
+                140,
+                "Press R to Restart"
+            );
+            restartText.setFill(Color.WHITE);
+            restartText.setStyle("-fx-font-size: 18px;");
+            root.getChildren().addAll(overlay, loseText, restartText);
+        }
     }
+
+    public void setGame(Gamestate game) {
+        this.game = game;
     }
+
 
 }

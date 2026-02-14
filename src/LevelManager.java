@@ -22,9 +22,4 @@ public class LevelManager {
             currentLevelIndex++;
         }
     }
-
-    //restarts a level when prompted 
-    public void restartLevel() {
-        // nothing needed here yet
-    }
 }

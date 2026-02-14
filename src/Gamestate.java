@@ -22,6 +22,7 @@ public class Gamestate {
     //moves player
     //checks and updates status 
     public void applyInstruction (Player player, Direction d) {
+        if (status != GameStatus.PLAYING) return;
         Position current = player.getPlayerPosition();
         Position next = current.move(d);
 
