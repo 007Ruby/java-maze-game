@@ -8,17 +8,22 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.image.WritableImage;
+import javafx.animation.AnimationTimer;
+
 
 public class GameView {
 
     private Pane root;
     private Gamestate game;
     private int tileSize = 80;
+    private double time = 0;
 
     public GameView(Gamestate game, Pane root) {
         this.game = game;
         this.root = root;
+        animationTimer.start();
         draw();
+        animationTimer.start();
     }
 
     public void draw() {
@@ -77,10 +82,11 @@ public class GameView {
     private void drawPlayers() {
 
     int tileSize = 80;
-
+    
     placePlayer(game.getMergedPlayer(), tileSize);
     placePlayer(game.getWhitePlayer(), tileSize);
     placePlayer(game.getBlackPlayer(), tileSize);
+
 }
 
     private void placePlayer (Player player, int tileSize) {
@@ -89,15 +95,26 @@ public class GameView {
 
         double centerX = pos.getX() * tileSize + tileSize / 2.0;
         double centerY = pos.getY() * tileSize + tileSize / 2.0;
-
-        Circle playerCircle = new Circle(centerX, centerY, tileSize / 3.0);
+        Circle playerCircleBlack = new Circle(centerX, centerY, tileSize / 5.0);
+        Circle playerCircleWhite = new Circle(centerX, centerY, tileSize / 5.0);
+        Circle playerCircleMerged = new Circle(centerX, centerY, tileSize / 3.0);
+        if (game.getMergedPlayer() == null && game.getWhitePlayer().getPlayerPosition().equals(game.getBlackPlayer().getPlayerPosition())) {
+            playerCircleBlack = new Circle(centerX + 15, centerY, tileSize / 5.0);
+            playerCircleWhite = new Circle(centerX - 15, centerY, tileSize / 5.0);
+        }
         
         switch (player.getPlayerForm()) {
-                case BLACK -> {playerCircle.setFill(Color.BLACK); playerCircle.setStroke(Color.WHITE);}
-                case WHITE -> {playerCircle.setFill(Color.WHITE); playerCircle.setStroke(Color.BLACK);}
-                case GREY -> {playerCircle.setFill(Color.DARKGREY); playerCircle.setStroke(Color.BLACK);}
+                case BLACK -> {playerCircleBlack.setFill(Color.BLACK); 
+                                playerCircleBlack.setStroke(Color.WHITE);
+                                root.getChildren().add(playerCircleBlack);
+                            }
+                case WHITE -> {playerCircleWhite.setFill(Color.WHITE); 
+                                playerCircleWhite.setStroke(Color.BLACK);
+                                root.getChildren().add(playerCircleWhite);}
+                case GREY -> {playerCircleMerged.setFill(Color.DARKGREY); 
+                            playerCircleMerged.setStroke(Color.BLACK);
+                                root.getChildren().add(playerCircleMerged);}
             }
-        root.getChildren().add(playerCircle);
     }
 
     public void drawExitWarning() {
@@ -122,8 +139,8 @@ public class GameView {
 
             double centerX = pos.getX() * tileSize + tileSize / 2.0;
             double centerY = pos.getY() * tileSize + tileSize / 2.0;
-
-            Circle shardCircle = new Circle(centerX, centerY, tileSize / 6.0);
+            double offsetY = Math.sin(time) * 3;
+            Circle shardCircle = new Circle(centerX, centerY + offsetY, tileSize / 8.0);
 
             // Color based on shard form
             switch (shard.getShardForm()) {
@@ -234,6 +251,14 @@ public class GameView {
 
         return new ImagePattern(image);
     }
+
+    private AnimationTimer animationTimer = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            time += 0.05;
+            draw();  // redraw continuously for animation
+        }
+    };
 
 
 }
