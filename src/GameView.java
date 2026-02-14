@@ -17,19 +17,26 @@ public class GameView {
     private Gamestate game;
     private int tileSize = 80;
     private double time = 0;
+    private Circle mergedCircle;
+    private Circle blackCircle;
+    private Circle whiteCircle;
+    private Pane staticLayer = new Pane();
+    private Pane dynamicLayer = new Pane();
+    private double renderMergedX, renderMergedY;
+    private double renderBlackX, renderBlackY;
+    private double renderWhiteX, renderWhiteY;
 
     public GameView(Gamestate game, Pane root) {
         this.game = game;
         this.root = root;
-        animationTimer.start();
-        draw();
+        root.getChildren().addAll(staticLayer, dynamicLayer);
+        playerSetup();
         animationTimer.start();
     }
 
     public void draw() {
-            root.getChildren().clear();
+            staticLayer.getChildren().clear();
             drawGrid();
-            drawPlayers();
             drawShards();
             checkForWin();
             checkForLoss();
@@ -37,85 +44,67 @@ public class GameView {
             drawExitWarning();
             drawTutorialMessage();
         }
-        private void drawTutorialMessage() {
-            if (game.getTutorialMessage() == null) return;
-            String message = game.getTutorialMessage();
-            Text text = new Text(30, 80, message);
-            text.setFill(Color.NAVY);
-            text.setStyle("-fx-font-size: 18px;");
-            root.getChildren().add(text);
-        }
 
-        private void drawGrid() {
-            for (int row = 0; row < game.grid.getHeight(); row++) {
-                for (int col = 0; col < game.grid.getWidth(); col++) {
-                    //The tile being drawn on the grid
-                    Rectangle drawnTile = new Rectangle(
-                            col * tileSize,
-                            row * tileSize,
-                            tileSize,
-                            tileSize
-                    );
-                    //The tile object in the backend
-                    Tile tile = game.getGrid().getTileAt(new Position(col, row));
+    public void playerSetup() {
+        mergedCircle = new Circle(tileSize / 3.0);
+        mergedCircle.setFill(Color.DARKGREY);
+        mergedCircle.setStroke(Color.BLACK);
 
-                    //Drawing the tile on the grid in correspondance to the object in the backend
-                    switch (tile.getTileType()) {
-                        case GREY -> drawnTile.setFill(Color.GREY);
-                        case BLACK -> drawnTile.setFill(Color.BLACK);
-                        case WHITE -> drawnTile.setFill(Color.WHITE);
-                        case EXIT -> drawnTile.setFill(Color.GREEN);
-                        case WALL -> {
-                            drawnTile.setFill(createStripedWallPattern(tileSize));
-                            drawnTile.setStroke(Color.BLACK);
-                            drawnTile.setStrokeWidth(2);
-                        }
-                    }
-                    drawnTile.setStroke(Color.BLACK);
+        blackCircle = new Circle(tileSize / 5.0);
+        blackCircle.setFill(Color.BLACK);
+        blackCircle.setStroke(Color.WHITE);
 
-                    root.getChildren().add(drawnTile);
-                }
-            }
-            
-        }
+        whiteCircle = new Circle(tileSize / 5.0);
+        whiteCircle.setFill(Color.WHITE);
+        whiteCircle.setStroke(Color.BLACK);
 
-    private void drawPlayers() {
+        dynamicLayer.getChildren().addAll(mergedCircle, blackCircle, whiteCircle);
+    }
 
-    int tileSize = 80;
     
-    placePlayer(game.getMergedPlayer(), tileSize);
-    placePlayer(game.getWhitePlayer(), tileSize);
-    placePlayer(game.getBlackPlayer(), tileSize);
 
-}
+    private void drawTutorialMessage() {
+        if (game.getTutorialMessage() == null) return;
+        String message = game.getTutorialMessage();
+        Text text = new Text(30, 80, message);
+        text.setFill(Color.NAVY);
+        text.setStyle("-fx-font-size: 18px;");
+        staticLayer.getChildren().add(text);
+    }
 
-    private void placePlayer (Player player, int tileSize) {
-        if (player == null) return;
-        Position pos = player.getPlayerPosition();
+    private void drawGrid() {
+        for (int row = 0; row < game.grid.getHeight(); row++) {
+            for (int col = 0; col < game.grid.getWidth(); col++) {
+                //The tile being drawn on the grid
+                Rectangle drawnTile = new Rectangle(
+                        col * tileSize,
+                        row * tileSize,
+                        tileSize,
+                        tileSize
+                );
+                //The tile object in the backend
+                Tile tile = game.getGrid().getTileAt(new Position(col, row));
 
-        double centerX = pos.getX() * tileSize + tileSize / 2.0;
-        double centerY = pos.getY() * tileSize + tileSize / 2.0;
-        Circle playerCircleBlack = new Circle(centerX, centerY, tileSize / 5.0);
-        Circle playerCircleWhite = new Circle(centerX, centerY, tileSize / 5.0);
-        Circle playerCircleMerged = new Circle(centerX, centerY, tileSize / 3.0);
-        if (game.getMergedPlayer() == null && game.getWhitePlayer().getPlayerPosition().equals(game.getBlackPlayer().getPlayerPosition())) {
-            playerCircleBlack = new Circle(centerX + 15, centerY, tileSize / 5.0);
-            playerCircleWhite = new Circle(centerX - 15, centerY, tileSize / 5.0);
+                //Drawing the tile on the grid in correspondance to the object in the backend
+                switch (tile.getTileType()) {
+                    case GREY -> drawnTile.setFill(Color.GREY);
+                    case BLACK -> drawnTile.setFill(Color.BLACK);
+                    case WHITE -> drawnTile.setFill(Color.WHITE);
+                    case EXIT -> drawnTile.setFill(Color.GREEN);
+                    case WALL -> {
+                        drawnTile.setFill(createStripedWallPattern(tileSize));
+                        drawnTile.setStroke(Color.BLACK);
+                        drawnTile.setStrokeWidth(2);
+                    }
+                }
+                drawnTile.setStroke(Color.BLACK);
+
+                staticLayer.getChildren().add(drawnTile);
+            }
         }
         
-        switch (player.getPlayerForm()) {
-                case BLACK -> {playerCircleBlack.setFill(Color.BLACK); 
-                                playerCircleBlack.setStroke(Color.WHITE);
-                                root.getChildren().add(playerCircleBlack);
-                            }
-                case WHITE -> {playerCircleWhite.setFill(Color.WHITE); 
-                                playerCircleWhite.setStroke(Color.BLACK);
-                                root.getChildren().add(playerCircleWhite);}
-                case GREY -> {playerCircleMerged.setFill(Color.DARKGREY); 
-                            playerCircleMerged.setStroke(Color.BLACK);
-                                root.getChildren().add(playerCircleMerged);}
-            }
     }
+
 
     public void drawExitWarning() {
         if (game.shouldShowExitWarning()) {
@@ -127,7 +116,7 @@ public class GameView {
             warning.setFill(Color.RED);
             warning.setStyle("-fx-font-size: 20px;");
             warning.setOpacity(0.9);
-            root.getChildren().add(warning);
+            staticLayer.getChildren().add(warning);
         }
     }
 
@@ -149,7 +138,7 @@ public class GameView {
                 case GREY -> {shardCircle.setFill(Color.DARKGREY); shardCircle.setStroke(Color.BLACK);}
             }
 
-            root.getChildren().add(shardCircle);
+            staticLayer.getChildren().add(shardCircle);
         }
     }
 
@@ -181,7 +170,7 @@ public class GameView {
         nextText.setX((width - nextText.getLayoutBounds().getWidth()) / 2);
         nextText.setY(height / 2 + 35);
 
-        root.getChildren().addAll(overlay, wonText, restartText, nextText);
+        staticLayer.getChildren().addAll(overlay, wonText, restartText, nextText);
 }
 
       //if all winning requirements have been met, visuals will refelct winning
@@ -209,7 +198,7 @@ public class GameView {
             );
             restartText.setFill(Color.WHITE);
             restartText.setStyle("-fx-font-size: 18px;");
-            root.getChildren().addAll(overlay, loseText, restartText);
+            staticLayer.getChildren().addAll(overlay, loseText, restartText);
         }
     }
 
@@ -221,7 +210,7 @@ public class GameView {
         );
         shardCounter.setFill(Color.WHITE);
         shardCounter.setStyle("-fx-font-size: 12px;");
-        root.getChildren().add(shardCounter);
+        staticLayer.getChildren().add(shardCounter);
     }
 
     public void setGame(Gamestate game) {
@@ -256,9 +245,71 @@ public class GameView {
         @Override
         public void handle(long now) {
             time += 0.05;
-            draw();  // redraw continuously for animation
+            updatePlayers();
+            draw();
+            
         }
     };
+
+
+    private void updatePlayers() {
+        double speed = 0.2; 
+
+        if (game.getMergedPlayer() == null && (game.getWhitePlayer().getPlayerPosition().equals(game.getBlackPlayer().getPlayerPosition()))) {
+            mergedCircle.setVisible(true);
+            blackCircle.setVisible(false);
+            whiteCircle.setVisible(false);
+            blackCircle.setRadius(tileSize / 5.0);
+            whiteCircle.setRadius(tileSize / 5.0);
+            blackCircle.setCenterX(blackCircle.getCenterX() + 15);
+            whiteCircle.setCenterX(blackCircle.getCenterX() - 15);
+        }
+        
+        if (game.getMergedPlayer() != null) {
+            mergedCircle.setVisible(true);
+            blackCircle.setVisible(false);
+            whiteCircle.setVisible(false);
+            Position pos = game.getMergedPlayer().getPlayerPosition();
+            double targetX = pos.getX() * tileSize + tileSize / 2.0;
+            double targetY = pos.getY() * tileSize + tileSize / 2.0;
+            renderMergedX += (targetX - renderMergedX) * speed;
+            renderMergedY += (targetY - renderMergedY) * speed;
+
+            mergedCircle.setCenterX(renderMergedX);
+            mergedCircle.setCenterY(renderMergedY);
+        }
+
+        if (game.getBlackPlayer() != null) {
+            mergedCircle.setVisible(false);
+            blackCircle.setVisible(true);
+            whiteCircle.setVisible(true);
+            Position pos = game.getBlackPlayer().getPlayerPosition();
+            double targetX = pos.getX() * tileSize + tileSize / 2.0;
+            double targetY = pos.getY() * tileSize + tileSize / 2.0;
+
+            renderBlackX += (targetX - renderBlackX) * speed;
+            renderBlackY += (targetY - renderBlackY) * speed;
+
+            blackCircle.setCenterX(renderBlackX);
+            blackCircle.setCenterY(renderBlackY);
+        }
+
+        if (game.getWhitePlayer() != null) {
+            mergedCircle.setVisible(false);
+            blackCircle.setVisible(true);
+            whiteCircle.setVisible(true);
+            Position pos = game.getWhitePlayer().getPlayerPosition();
+            double targetX = pos.getX() * tileSize + tileSize / 2.0;
+            double targetY = pos.getY() * tileSize + tileSize / 2.0;
+
+            renderWhiteX += (targetX - renderWhiteX) * speed;
+            renderWhiteY += (targetY - renderWhiteY) * speed;
+
+            whiteCircle.setCenterX(renderWhiteX);
+            whiteCircle.setCenterY(renderWhiteY);
+        }
+    }
+
 
 
 }
