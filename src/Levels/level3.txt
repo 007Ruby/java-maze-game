@@ -1,0 +1,14 @@
+7 8
+P......E
+.WW#BB..
+.W.#.B..
+.W...B..
+.##.##..
+........
+........
+KEY 5
+SHARD 1 1 WHITE
+SHARD 1 3 WHITE
+SHARD 5 1 BLACK
+SHARD 5 3 BLACK
+SHARD 3 5 GREY
