@@ -43,6 +43,7 @@ public class GameController {
     }
 
     private void nextLevel() {
+        if (levelManager.isLastLevel()) return;
         levelManager.nextLevel();
         game = levelManager.loadCurrentLevel();
         view.setGame(game);
@@ -54,7 +55,7 @@ public class GameController {
 
         stage.setWidth(width);
         stage.setHeight(height);
-
+        if (levelManager.isLastLevel()) view.setIsLastLevel();
         view.draw();
     }
 

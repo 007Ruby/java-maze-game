@@ -24,4 +24,10 @@ public class LevelManager {
             currentLevelIndex++;
         }
     }
+
+    //returns true if the current level is the final level
+    //returns false if not
+    public boolean isLastLevel() {
+        return currentLevelIndex == levels.size() - 1;
+    }
 }

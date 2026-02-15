@@ -9,7 +9,6 @@ public class Key {
         this.collectedShards = 0;
     }
     boolean isComplete() {
-        System.out.println("NUMBER OF COLLECTED SHARDS IS" + collectedShards);
         return collectedShards == requiredCount;
     };
 

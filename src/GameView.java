@@ -31,12 +31,14 @@ public class GameView {
     private double targetBlackX, targetBlackY;
     private double targetWhiteX, targetWhiteY;
     private double targetMergedX, targetMergedY;
+    private boolean isLastLevel;
 
     public GameView(Gamestate game, Pane root) {
         this.game = game;
         this.root = root;
         wasMerged = false;
         sameTile = false;
+        isLastLevel = false;
         root.getChildren().addAll(staticLayer, dynamicLayer);
         playerSetup();
         animationTimer.start();
@@ -52,6 +54,10 @@ public class GameView {
             drawExitWarning();
             drawTutorialMessage();
         }
+
+    public void setIsLastLevel() {
+        this.isLastLevel = true;
+    }
 
     public void playerSetup() {
         mergedCircle = new Circle(tileSize / 3.0);
@@ -173,6 +179,9 @@ public class GameView {
         restartText.setY(height / 2 + 10);
 
         Text nextText = new Text("Press N for Next Level");
+        if (isLastLevel) {
+            nextText = new Text("You Completed All Levels!");
+        }
         nextText.setFill(Color.WHITE);
         nextText.setStyle("-fx-font-size: 18px;");
         nextText.setX((width - nextText.getLayoutBounds().getWidth()) / 2);
